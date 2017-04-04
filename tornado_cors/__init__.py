@@ -29,6 +29,11 @@ class CorsMixin(object):
         if self.CORS_EXPOSE_HEADERS:
             self.set_header('Access-Control-Expose-Headers', self.CORS_EXPOSE_HEADERS)
 
+        print "setting default headers"
+        if self.CORS_CREDENTIALS:
+            self.set_header('Access-Control-Allow-Credentials', 'true')
+            print "setting access control in default headers to true"
+
     @custom_decorator.wrapper
     def options(self, *args, **kwargs):
         if self.CORS_HEADERS:
@@ -38,8 +43,14 @@ class CorsMixin(object):
         else:
             self.set_header('Access-Control-Allow-Methods', self._get_methods())
         if self.CORS_CREDENTIALS != None:
-            self.set_header('Access-Control-Allow-Credentials',
-                "true" if self.CORS_CREDENTIALS else "false")
+            if self.CORS_CREDENTIALS:
+                self.set_header('Access-Control-Allow-Credentials', 'true')
+                print "setting Access control allow credentials to true"
+            else:
+                self.set_header('Access-Control-Allow-Credentials', 'false')
+            #
+            # self.set_header('Access-Control-Allow-Credentials',
+            #     "true" if self.CORS_CREDENTIALS else "false")
         if self.CORS_MAX_AGE:
             self.set_header('Access-Control-Max-Age', self.CORS_MAX_AGE)
 
